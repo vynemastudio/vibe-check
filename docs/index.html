@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vibe Check: scan your vibe-coded app before you ship</title>
+<meta name="description" content="Free AI skill for Claude Code, Cursor and Codex. Scans your app for 16 common legal and compliance gaps and tells you how to fix them. Educational, not legal advice.">
+<meta name="theme-color" content="#0B0E13">
+<meta property="og:title" content="Before you ship, vibe-check it.">
+<meta property="og:description" content="Free AI skill: 16 legal and compliance checks for vibe-coded apps. PASS / FAIL / fix.">
+<meta property="og:url" content="https://vynemastudio.github.io/vibe-check/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B0E13'/%3E%3Cpath d='M16 6 27 25H5z' fill='%23C5FF4A'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0B0E13;--bg2:#11161E;--line:#1E2530;--lime:#C5FF4A;--white:#F5F5F2;--mute:#8A93A3;--red:#FF4D4F;--amber:#FFC24A;
+--mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--white);font:16px/1.55 var(--sans);overflow-x:hidden}
+a{color:var(--lime)}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.glow{position:fixed;inset:-30vh -20vw auto;height:80vh;background:radial-gradient(closest-side,rgba(197,255,74,.13),transparent 70%);pointer-events:none;z-index:0}
+.grid{position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:44px 44px;opacity:.28;mask-image:linear-gradient(#000,transparent 70%);-webkit-mask-image:linear-gradient(#000,transparent 70%);pointer-events:none;z-index:0}
+header,main,footer{position:relative;z-index:1}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.02em;color:var(--white);text-decoration:none}
+.logo i{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:16px solid var(--lime)}
+.nav-cta{font:600 14px var(--sans);color:var(--bg);background:var(--lime);padding:9px 16px;border-radius:999px;text-decoration:none}
+.hero{display:grid;gap:36px;padding-top:36px;padding-bottom:56px;align-items:center}
+.pill{display:inline-flex;gap:8px;align-items:center;font:600 11.5px var(--mono);letter-spacing:.04em;white-space:nowrap;text-transform:uppercase;color:var(--lime);border:1px solid rgba(197,255,74,.35);background:rgba(197,255,74,.07);padding:6px 12px;border-radius:999px}
+.pill b{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+h1{font-size:clamp(40px,10.5vw,72px);line-height:.98;letter-spacing:-.035em;font-weight:850;margin:18px 0 18px}
+h1 em{font-style:normal;color:var(--lime);position:relative;white-space:nowrap}
+h1 em:after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:.1em;background:var(--lime);opacity:.35;border-radius:9px}
+.sub{font-size:clamp(17px,4.4vw,20px);color:#C9CED6;max-width:560px}
+.sub strong{color:var(--white)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 16px var(--sans);padding:15px 22px;border-radius:14px;text-decoration:none;border:1px solid transparent;cursor:pointer;min-height:52px}
+.btn-lime{background:var(--lime);color:var(--bg);box-shadow:0 10px 40px -10px rgba(197,255,74,.55)}
+.btn-ghost{background:transparent;color:var(--white);border-color:#2A3341}
+.btn:hover{transform:translateY(-1px)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:18px;color:var(--mute);font:13px var(--mono)}
+.meta span:before{content:"✓ ";color:var(--lime)}
+/* terminal */
+.term{background:#070A0E;border:1px solid #232B37;border-radius:18px;box-shadow:0 30px 80px -30px rgba(0,0,0,.9),0 0 0 1px rgba(197,255,74,.04);overflow:hidden;font:12.5px/1.6 var(--mono)}
+.term-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid #1A212B;background:#0D1117}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#2A313C}
+.term-bar i:nth-child(1){background:#FF5F57}.term-bar i:nth-child(2){background:#FEBC2E}.term-bar i:nth-child(3){background:#28C840}
+.term-bar span{margin-left:auto;color:var(--mute);font-size:11px}
+.term-body{padding:16px;min-height:372px;white-space:pre-wrap;word-break:break-word}
+.t-cmd{color:var(--white)}.t-cmd:before{content:"$ ";color:var(--lime)}
+.t-dim{color:#5D6675}.t-lime{color:var(--lime)}.t-red{color:var(--red)}.t-amb{color:var(--amber)}.t-cy{color:#7CC7FF}
+.tag{display:inline-block;font-weight:800;padding:0 6px;border-radius:4px;margin-right:8px}
+.tag.f{background:var(--red);color:#fff}.tag.p{background:var(--lime);color:var(--bg)}
+.caret{display:inline-block;width:8px;height:15px;background:var(--lime);vertical-align:-2px;animation:pulse 1s steps(1) infinite}
+.row{opacity:0;transform:translateY(4px);animation:in .28s forwards}
+@keyframes in{to{opacity:1;transform:none}}
+.flip{animation:flip .5s}
+.fixed .t-cy,.fixed .t-cy+.t-dim{text-decoration:line-through;opacity:.45}
+@keyframes flip{0%{filter:brightness(2)}100%{filter:none}}
+/* sections */
+section{padding:56px 0;border-top:1px solid var(--line)}
+.eyebrow{font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--lime)}
+h2{font-size:clamp(28px,7vw,44px);letter-spacing:-.03em;line-height:1.05;margin:10px 0 14px}
+.lead{color:#B8BFCA;max-width:640px}
+.tabs{margin-top:26px;background:var(--bg2);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.tablist{display:flex;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none}
+.tablist::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;background:none;border:0;color:var(--mute);font:600 15px var(--sans);padding:16px 18px;cursor:pointer;border-bottom:2px solid transparent;min-height:52px}
+.tab[aria-selected=true]{color:var(--white);border-bottom-color:var(--lime)}
+.panel{padding:20px}
+.panel[hidden]{display:none}
+.step{color:#B8BFCA;font-size:15px;margin:4px 0 10px}
+.step b{color:var(--white)}
+.code{position:relative;background:#070A0E;border:1px solid #1E2631;border-radius:12px;margin:0 0 14px}
+.code pre{font:13px/1.6 var(--mono);color:var(--white);padding:14px 96px 14px 14px;overflow-x:auto;white-space:pre}
+.code pre .p{color:var(--lime);user-select:none}
+.copy{position:absolute;top:8px;right:8px;font:700 12px var(--sans);background:#1A212B;color:var(--white);border:1px solid #2A3341;border-radius:9px;padding:8px 12px;cursor:pointer;min-height:36px}
+.copy.ok{background:var(--lime);color:var(--bg);border-color:var(--lime)}
+.checks{display:grid;gap:12px;margin-top:26px;grid-template-columns:1fr}
+.check{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.check .id{font:700 12px var(--mono);color:var(--bg);background:var(--lime);border-radius:6px;padding:2px 7px;height:fit-content;margin-top:2px}
+.check h3{font-size:16px;line-height:1.3}
+.check p{grid-column:2;color:var(--mute);font-size:14px}
+.check p b{color:#D8DCE2;font-weight:600}
+.faq{margin-top:20px}
+details{border-bottom:1px solid var(--line);padding:4px 0}
+summary{cursor:pointer;list-style:none;font-weight:700;font-size:17px;padding:16px 34px 16px 0;position:relative}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";position:absolute;right:4px;top:12px;color:var(--lime);font:400 26px var(--mono);transition:transform .2s}
+details[open] summary:after{transform:rotate(45deg)}
+details p{color:#B8BFCA;padding:0 0 18px;max-width:760px}
+.disc{background:rgba(255,77,79,.06);border:1px solid rgba(255,77,79,.35);border-radius:16px;padding:20px;color:#E9C9C9;font-size:15px}
+.disc strong{color:#fff}
+footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--mute);font-size:14px;text-align:center}
+footer a{color:var(--white);text-decoration:none;border-bottom:1px solid var(--lime)}
+@media (min-width:900px){
+  .hero{grid-template-columns:1.05fr 1fr;padding-top:64px;padding-bottom:90px;gap:56px}
+  .checks{grid-template-columns:repeat(2,1fr)}
+  .term{font-size:13px}
+  section{padding:84px 0}
+  .panel{padding:28px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.row{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="glow"></div><div class="grid"></div>
+<header class="wrap"><nav><a class="logo" href="#"><i></i>VIBE CHECK</a><a class="nav-cta" href="#install">Install free</a></nav></header>
+<main>
+<div class="wrap hero">
+  <div>
+    <span class="pill"><b></b>Free · Claude Code · Cursor · Codex</span>
+    <h1>Before you ship, <em>vibe-check</em> it.</h1>
+    <p class="sub">Your AI wrote the app in a weekend. Vibe Check scans it for <strong>16 legal and compliance gaps</strong> vibe-coded apps often miss, from Google Fonts and session replay to hidden auto-renew terms, then tells you exactly how to fix each one.</p>
+    <div class="ctas">
+      <a class="btn btn-lime" href="#install">Install in 30 seconds →</a>
+      <a class="btn btn-ghost" href="vibe-check-skill.zip" download>⤓ Download skill (.zip)</a>
+    </div>
+    <div class="meta"><span>16 checks</span><span>file:line evidence</span><span>0 dependencies</span><span>MIT</span></div>
+  </div>
+  <div class="term" aria-label="Animated demo: Vibe Check finds 3 failures, they get fixed, and the scan passes">
+    <div class="term-bar"><i></i><i></i><i></i><span>~/shipfast-notes</span></div>
+    <div class="term-body" id="term" aria-live="off"></div>
+  </div>
+</div>
+
+<section id="install"><div class="wrap">
+  <div class="eyebrow">Install</div>
+  <h2>One line. Then say “vibe check my app”.</h2>
+  <p class="lead">Pick your tool. The installer copies the skill, prints what it did, and touches nothing else.</p>
+  <div class="tabs">
+    <div class="tablist" role="tablist" aria-label="Install options">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="p-claude" id="t-claude">Claude Code</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-cursor" id="t-cursor" tabindex="-1">Cursor</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-codex" id="t-codex" tabindex="-1">Codex</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-manual" id="t-manual" tabindex="-1">Manual</button>
+    </div>
+    <div class="panel" role="tabpanel" id="p-claude" aria-labelledby="t-claude">
+      <p class="step"><b>Option A:</b> install it as a plugin inside Claude Code</p>
+      <div class="code"><pre><span class="p">› </span>/plugin marketplace add vynemastudio/vibe-check
+<span class="p">› </span>/plugin install vibe-check@vynemastudio</pre><button class="copy" data-copy="/plugin marketplace add vynemastudio/vibe-check&#10;/plugin install vibe-check@vynemastudio">Copy</button></div>
+      <p class="step"><b>Option B:</b> install it as a personal skill from your terminal</p>
+      <div class="code"><pre><span class="p">$ </span>curl -fsSL https://vynemastudio.github.io/vibe-check/install.sh | bash -s -- --claude</pre><button class="copy" data-copy="curl -fsSL https://vynemastudio.github.io/vibe-check/install.sh | bash -s -- --claude">Copy</button></div>
+      <p class="step">Then, in your app's folder, ask Claude: <b>“vibe check my app”</b>.</p>
+    </div>
+    <div class="panel" role="tabpanel" id="p-cursor" aria-labelledby="t-cursor" hidden>
+      <p class="step">Run this <b>in your project folder</b>. It adds a Cursor rule and the skill files.</p>
+      <div class="code"><pre><span class="p">$ </span>curl -fsSL https://vynemastudio.github.io/vibe-check/install.sh | bash -s -- --cursor</pre><button class="copy" data-copy="curl -fsSL https://vynemastudio.github.io/vibe-check/install.sh | bash -s -- --cursor">Copy</button></div>
+      <p class="step">Then ask in Cursor chat: <b>“vibe check my app”</b>.</p>
+    </div>
+    <div class="panel" role="tabpanel" id="p-codex" aria-labelledby="t-codex" hidden>
+      <p class="step">Run this <b>in your project folder</b>. It adds the skill and a short section to <code>AGENTS.md</code>.</p>
+      <div class="code"><pre><span class="p">$ </span>curl -fsSL https://vynemastudio.github.io/vibe-check/install.sh | bash -s -- --codex</pre><button class="copy" data-copy="curl -fsSL https://vynemastudio.github.io/vibe-check/install.sh | bash -s -- --codex">Copy</button></div>
+      <p class="step">Then ask Codex: <b>“vibe check my app”</b>.</p>
+    </div>
+    <div class="panel" role="tabpanel" id="p-manual" aria-labelledby="t-manual" hidden>
+      <p class="step"><b>1.</b> Download and unzip the skill into your skills folder.</p>
+      <div class="code"><pre><span class="p">$ </span>mkdir -p ~/.claude/skills && cd ~/.claude/skills
+<span class="p">$ </span>curl -fsSLO https://vynemastudio.github.io/vibe-check/vibe-check-skill.zip
+<span class="p">$ </span>unzip vibe-check-skill.zip && rm vibe-check-skill.zip</pre><button class="copy" data-copy="mkdir -p ~/.claude/skills && cd ~/.claude/skills&#10;curl -fsSLO https://vynemastudio.github.io/vibe-check/vibe-check-skill.zip&#10;unzip vibe-check-skill.zip && rm vibe-check-skill.zip">Copy</button></div>
+      <p class="step"><b>2.</b> Or just run the scanner (Node 18+, no AI needed):</p>
+      <div class="code"><pre><span class="p">$ </span>node ~/.claude/skills/vibe-check/scripts/scan.mjs .</pre><button class="copy" data-copy="node ~/.claude/skills/vibe-check/scripts/scan.mjs .">Copy</button></div>
+      <a class="btn btn-ghost" href="vibe-check-skill.zip" download>⤓ Download skill (.zip)</a>
+    </div>
+  </div>
+</div></section>
+
+<section id="checks"><div class="wrap">
+  <div class="eyebrow">What it checks</div>
+  <h2>16 checks. Real laws. Honest numbers.</h2>
+  <p class="lead">Every figure is a verified statutory maximum or a specific ruling, shown with the condition that triggers it. Nothing is added up into a scary total.</p>
+  <div class="checks" id="checklist"></div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="eyebrow">FAQ</div>
+  <h2>Questions</h2>
+  <div class="faq">
+    <details><summary>Does a clean report mean my app is legally compliant?</summary><p>No. Vibe Check finds common gaps in code and explains them. Whether a law applies depends on your users, location, revenue and facts, which code can't show. Treat it as a pre-launch checklist, not legal sign-off.</p></details>
+    <details><summary>Does my code leave my machine?</summary><p>The scanner runs locally with zero dependencies and makes no network calls. The AI part runs in whatever agent you already use (Claude Code, Cursor or Codex), under that tool's own data terms.</p></details>
+    <details><summary>Which stacks does it understand?</summary><p>Anything web: plain HTML, React, Next.js, Vue, Svelte, Astro, Supabase, Firebase, Stripe and more. The scanner reads source files; the agent handles everything it can't decide statically.</p></details>
+    <details><summary>Is it really free?</summary><p>Yes. It's MIT-licensed and open source on <a href="https://github.com/vynemastudio/vibe-check">GitHub</a>. Fixes and new checks are welcome.</p></details>
+    <details><summary>Is the €100 Google Fonts fine real?</summary><p>A Munich court in 2022 awarded €100 to <em>one</em> visitor whose IP was sent to Google without consent. It isn't €100 per visitor, and a 2023 ruling rejected mass "crawler" claims. The risk is real but modest, and the fix takes two minutes.</p></details>
+    <details><summary>How do I uninstall?</summary><p>Delete <code>~/.claude/skills/vibe-check</code> (or run <code>/plugin uninstall vibe-check</code>), <code>.cursor/vibe-check</code> with <code>.cursor/rules/vibe-check.mdc</code>, or <code>.agents/vibe-check</code> along with the marked section in <code>AGENTS.md</code>.</p></details>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="disc"><strong>Educational, not legal advice.</strong> Vibe Check is an educational tool. It doesn't create a lawyer–client relationship, and a passing report doesn't mean your app complies with any law. Penalty figures are statutory maximums or single rulings, shown for context. Laws change and depend on your facts, so consult a qualified lawyer. <a href="https://github.com/vynemastudio/vibe-check/blob/main/skills/vibe-check/references/SOURCES.md">See sources</a>.</div>
+</div></section>
+</main>
+<footer class="wrap">Made by <strong style="color:var(--white)">Vynema Studio</strong> · <a href="https://instagram.com/vynemastudio">@vynemastudio</a> on Instagram<br><span style="font-size:12px">MIT licence · <a href="https://github.com/vynemastudio/vibe-check">GitHub</a></span></footer>
+
+<script>
+const CHECKS=[
+["VC01","Google Fonts from Google's servers","If you have EU visitors: a Munich court awarded <b>€100 to one visitor</b> (2022)."],
+["VC02","Session replay before consent","California CIPA suits: <b>$5,000 per violation</b>; courts are split."],
+["VC03","Hidden auto-renew terms","California ARL: unconsented renewals can be <b>deemed a gift</b>; online cancel since Jul 2025."],
+["VC04","Kids' data and age gate","Only if child-directed or you know a user is under 13. COPPA: up to <b>$53,088 per violation</b>."],
+["VC05","Email without unsubscribe","CAN-SPAM: up to <b>$53,088 per email</b>."],
+["VC06","Uploads without a DMCA agent","<b>$6</b> registration. No fine, but you lose the safe harbor."],
+["VC07","Secrets in frontend / .env","Leaked keys get abused within hours. Rotate and move them server-side."],
+["VC08","Open database rules","Firebase <b>if true</b> rules or Supabase without RLS."],
+["VC09","Privacy policy and terms","CalOPPA, GDPR Art. 13 and the app stores require a policy."],
+["VC10","Trackers before cookie consent","EU/UK: non-essential trackers need opt-in first."],
+["VC11","\u201cDo Not Sell or Share\u201d","CCPA, only above its thresholds: <b>$2,663 / $7,988</b> intentional."],
+["VC12","Accessibility basics","Alt text, labels, focus, zoom. ADA letters and the EU Accessibility Act."],
+["VC13","AI chatbot disclosure","EU AI Act Art. 50 from <b>2 Aug 2026</b>; California bot law."],
+["VC14","Refund policy","EU 14-day withdrawal rules; processors require a stated policy."],
+["VC15","Sales tax / VAT","EU OSS and US nexus. Consider a merchant of record."],
+["VC16","Licences","Open-source, fonts, images and AI model terms."]];
+document.getElementById('checklist').innerHTML=CHECKS.map(([i,t,d])=>`<div class="check"><span class="id">${i}</span><h3>${t}</h3><p>${d}</p></div>`).join('');
+
+// tabs
+const tabs=[...document.querySelectorAll('.tab')];
+function sel(t){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on});}
+tabs.forEach((t,i)=>{t.onclick=()=>sel(t);t.onkeydown=e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];sel(n);n.focus();}}});
+// copy
+document.querySelectorAll('.copy').forEach(b=>b.onclick=async()=>{const txt=b.dataset.copy;try{await navigator.clipboard.writeText(txt)}catch{const a=document.createElement('textarea');a.value=txt;document.body.append(a);a.select();document.execCommand('copy');a.remove()}b.textContent='Copied ✓';b.classList.add('ok');setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok')},1600)});
+
+// terminal demo
+const T=document.getElementById('term');
+const S=[
+ ['cmd','vibe check my app',700],
+ ['html','<span class="t-lime">▲ VIBE CHECK</span> <span class="t-dim">v1.0 · scanning shipfast-notes/ (8 files)</span>',500],
+ ['html','<span class="tag f" data-id="1">FAIL</span>VC01 Google Fonts from Google servers\n   <span class="t-cy">index.html:8</span> <span class="t-dim">fonts.googleapis.com/css2?family=Inter</span>',650],
+ ['html','<span class="tag f" data-id="2">FAIL</span>VC02 Session replay before consent\n   <span class="t-cy">analytics.js:3</span> <span class="t-dim">rrweb.record({</span>',650],
+ ['html','<span class="tag f" data-id="3">FAIL</span>VC03 Auto-renew terms hidden at checkout\n   <span class="t-cy">checkout.html:9</span> <span class="t-dim">font-size:9px;color:#eee</span>',650],
+ ['html','<span class="tag p">PASS</span><span class="t-dim">VC05–VC13 · 8 more checks</span>',500],
+ ['html','<span class="t-red">3 FAIL</span> <span class="t-dim">·</span> <span class="t-lime">8 PASS</span>',1100],
+ ['cmd','fix them',700],
+ ['html','<span class="t-amb">✎</span> self-host Inter .woff2 <span class="t-dim">· removed googleapis link</span>',450],
+ ['html','<span class="t-amb">✎</span> start replay after opt-in <span class="t-dim">· maskAllInputs: true</span>',450],
+ ['html','<span class="t-amb">✎</span> renewal terms above button <span class="t-dim">· consent box · online cancel</span>',700],
+ ['flip','',900],
+ ['html','<span class="t-lime">0 FAIL · 11 PASS</span> <span class="t-dim">· ready for launch review</span>',600],
+ ['html','<span class="t-dim">Educational check, not legal advice.</span>',3600]];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+async function run(){
+  for(;;){T.innerHTML='';
+    for(const [k,v,w] of S){
+      if(k==='cmd'){const d=document.createElement('div');d.className='t-cmd';T.append(d);for(const ch of v){d.textContent+=ch;await sleep(reduce?0:45)}}
+      else if(k==='flip'){T.querySelectorAll('.tag.f').forEach(t=>{t.className='tag p flip';t.textContent='PASS';t.parentElement.classList.add('fixed')})}
+      else{const d=document.createElement('div');d.className='row';d.style.marginTop='6px';d.innerHTML=v;T.append(d)}
+      await sleep(w);
+    }
+  }
+}
+run();
+</script>
+</body>
+</html>
