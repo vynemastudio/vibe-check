@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
-  "name": "vynema-studio",
+  "name": "vynemastudio",
   "description": "Free, open-source agent skills from Vynema Studio.",
   "owner": {
     "name": "Vynema Studio",
