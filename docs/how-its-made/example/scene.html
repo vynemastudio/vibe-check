@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- Minimal deterministic three.js scene. MIT License (c) 2026 Vynema Studio. -->
+<html><body style="margin:0;background:#0B0E13">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.170.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const W = 1080, H = 1920;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H); renderer.setPixelRatio(1); document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#0B0E13');
+const camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 100);
+scene.add(new THREE.HemisphereLight('#F5F5F2', '#0B0E13', 1.2));
+const key = new THREE.DirectionalLight('#ffffff', 2); key.position.set(3, 5, 4); scene.add(key);
+const cube = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1),
+  new THREE.MeshStandardMaterial({ color: '#C5FF4A', flatShading: true, metalness: 0.3, roughness: 0.4 }));
+scene.add(cube);
+const ease = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
+// The whole trick: every frame is a pure function of t (seconds). No clocks, no Math.random.
+window.frame = (t) => {
+  cube.rotation.set(t * 0.6, t * 0.9, 0);
+  cube.scale.setScalar(0.6 + 0.4 * ease(Math.min(t / 1.5, 1)));
+  const a = t * 0.4;
+  camera.position.set(Math.sin(a) * 6, 1.5, Math.cos(a) * 6); camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+};
+window.ready = true;
+</script></body></html>
