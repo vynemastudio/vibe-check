@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]   # installer is bash; Windows users run it under WSL
         node: [18, 20, 22]
     steps:
       - uses: actions/checkout@v4

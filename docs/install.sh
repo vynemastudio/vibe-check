@@ -77,7 +77,7 @@ else
 fi
 
 TMP=""
-cleanup() { [ -n "$TMP" ] && rm -rf "$TMP"; }
+cleanup() { if [ -n "$TMP" ]; then rm -rf "$TMP"; fi; }
 trap cleanup EXIT INT TERM
 
 # get <remote-path> <local-destination>
@@ -147,8 +147,6 @@ install_cursor() {
 
 install_codex() {
   local target="./AGENTS.md"
-  local begin="<!-- ─────────────────── vibe-check (begin) ─────────────────── -->"
-  local end="<!-- ──────────────────── vibe-check (end) ───────────────────── -->"
 
   say ""
   info "${BOLD}Codex${OFF} ${GREY}→ ./AGENTS.md${OFF}"
@@ -324,7 +322,7 @@ fi
 
 # ───────────────────────────── confirm & install ───────────────────────────
 if [ "$WANT_CLAUDE" = "1" ] && [ -d "$HOME/.claude/skills/vibe-check" ] && [ "$FORCE" = "0" ] && [ "$DRY_RUN" = "0" ]; then
-  warn "~/.claude/skills/vibe-check already exists — updating it in place"
+  warn "$HOME/.claude/skills/vibe-check already exists — updating it in place"
 fi
 
 [ "$WANT_CLAUDE" = "1" ]  && install_claude
