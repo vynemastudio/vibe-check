@@ -1,0 +1,12 @@
+{
+  "name": "vynemastudio",
+  "description": "Free Claude Code skills by Vynema Studio",
+  "owner": { "name": "Vynema Studio", "url": "https://github.com/vynemastudio" },
+  "plugins": [
+    {
+      "name": "vibe-check",
+      "source": "./",
+      "description": "Scan your vibe-coded app for common legal and compliance gaps before you ship. Educational, not legal advice."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+---
+description: Vibe Check. Pre-launch legal and compliance audit of this web app (Google Fonts, session replay, auto-renew, COPPA, CAN-SPAM, DMCA, secrets, DB rules, privacy policy, cookie consent, CCPA, accessibility, AI disclosure, refunds, tax, licences). Use when asked to "vibe check", run a compliance/legal check or a pre-launch audit.
+globs:
+alwaysApply: false
+---
+
+# Vibe Check (Cursor)
+
+When the user asks for a vibe check, compliance check or pre-launch audit:
+
+1. Run the scanner from the project root: `node .cursor/vibe-check/scripts/scan.mjs . --md` (Node 18+, no dependencies).
+2. Open every cited file:line and confirm. Scanner hits are leads, not verdicts.
+3. Follow the full instructions in `.cursor/vibe-check/SKILL.md` and the 16 checks in `.cursor/vibe-check/references/CHECKS.md`.
+4. Report PASS / FAIL / NEEDS REVIEW per check with evidence and a concrete fix. Use conditional wording ("If you have EU visitors…"), only the verified figures in `references/SOURCES.md`, never add penalties into a total, and never say "compliant" or "legally safe".
+5. End with: "Educational check, not legal advice. Laws change and depend on your facts. Confirm with a qualified lawyer before relying on this."
