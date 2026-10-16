@@ -1,12 +1,18 @@
 {
-  "name": "vynemastudio",
-  "description": "Free Claude Code skills by Vynema Studio",
-  "owner": { "name": "Vynema Studio", "url": "https://github.com/vynemastudio" },
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
+  "name": "vynema-studio",
+  "description": "Free, open-source agent skills from Vynema Studio.",
+  "owner": {
+    "name": "Vynema Studio",
+    "url": "https://github.com/vynemastudio"
+  },
   "plugins": [
     {
       "name": "vibe-check",
-      "source": "./",
-      "description": "Scan your vibe-coded app for common legal and compliance gaps before you ship. Educational, not legal advice."
+      "source": ".",
+      "description": "Pre-launch legal & compliance scanner for vibe-coded web apps. PASS / FAIL / NEEDS REVIEW per check, with file:line evidence and a concrete fix. Educational, not legal advice.",
+      "category": "code-quality",
+      "tags": ["compliance", "privacy", "gdpr", "accessibility", "security", "pre-launch"]
     }
   ]
 }

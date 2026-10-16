@@ -1,15 +1,113 @@
 ---
-description: Vibe Check. Pre-launch legal and compliance audit of this web app (Google Fonts, session replay, auto-renew, COPPA, CAN-SPAM, DMCA, secrets, DB rules, privacy policy, cookie consent, CCPA, accessibility, AI disclosure, refunds, tax, licences). Use when asked to "vibe check", run a compliance/legal check or a pre-launch audit.
-globs:
+description: Pre-launch legal & compliance review for a web app. Use when the user is about to ship, deploy, launch or go live, or asks for a compliance, legal, privacy, GDPR, CCPA, COPPA, accessibility, security or pre-launch review. Runs a static scanner and reports PASS / FAIL / NEEDS REVIEW per check with file:line evidence and a concrete fix.
 alwaysApply: false
 ---
 
-# Vibe Check (Cursor)
+# vibe-check — pre-launch compliance review
 
-When the user asks for a vibe check, compliance check or pre-launch audit:
+A compliance review for an app that was built fast. Run the scanner, reason
+about what it cannot see, then produce one report: **PASS / FAIL / NEEDS
+REVIEW** per check, each with `file:line` evidence and a fix.
 
-1. Run the scanner from the project root: `node .cursor/vibe-check/scripts/scan.mjs . --md` (Node 18+, no dependencies).
-2. Open every cited file:line and confirm. Scanner hits are leads, not verdicts.
-3. Follow the full instructions in `.cursor/vibe-check/SKILL.md` and the 16 checks in `.cursor/vibe-check/references/CHECKS.md`.
-4. Report PASS / FAIL / NEEDS REVIEW per check with evidence and a concrete fix. Use conditional wording ("If you have EU visitors…"), only the verified figures in `references/SOURCES.md`, never add penalties into a total, and never say "compliant" or "legally safe".
-5. End with: "Educational check, not legal advice. Laws change and depend on your facts. Confirm with a qualified lawyer before relying on this."
+## Non-negotiable rules
+
+1. **Not legal advice, and say so.** End every report with the disclaimer at the
+   bottom of this file, verbatim. Never tell the user they are "compliant",
+   "legally safe", "covered" or "protected".
+2. **Write conditionally.** Most of these laws apply only in certain
+   situations: "if you have EU visitors…", "this may apply if…". COPPA applies
+   **only** where the service is child-directed or you have actual knowledge of
+   under-13 users — never state it as universal.
+3. **Never invent a figure.** Use only the numbers in this file or in
+   `SOURCES.md`. A missing DMCA agent is **not** a fine — the consequence is
+   losing the §512 safe harbour. Never attach "$150,000" to it.
+4. **Evidence or explicit absence.** Either `src/pay.ts:42`, or "no file in the
+   project contains X".
+5. **Report first, fix only when asked.**
+6. **Never print a secret's value** — location and kind only.
+
+## Step 1 — run the scanner
+
+Zero-dependency Node, read-only, no network:
+
+```bash
+node .cursor/vibe-check/scan.mjs . --json
+```
+
+The installer puts it there. If that path does not exist, find it:
+
+```bash
+find . ~/.vibe-check ~/.claude/skills -name scan.mjs -path '*vibe-check*' 2>/dev/null | head -1
+```
+
+Still nothing? Say so, and do the review by hand with the grep patterns below.
+Do not silently skip checks — an unchecked item is never a PASS.
+
+Flags: `--json` to parse, `--md` for a ready-made report, `--only <ids>`,
+`--max-evidence 30`, `--list`. Exit code is `1` when any check FAILs.
+
+## Step 2 — the 16 checks
+
+Confirm each scanner FAIL by opening the cited line (dead code and doc examples
+are false positives), and resolve NEEDS REVIEW items by reading the code where
+you can.
+
+| Check | FAIL when | The rule, conditionally stated |
+| :-- | :-- | :-- |
+| `google-fonts` | `fonts.googleapis.com` / `fonts.gstatic.com` in source | Sends every EU visitor's IP to Google pre-consent. LG München I, 20 Jan 2022, **3 O 17493/20**, awarded **€100**. Fix: self-host the `.woff2` files. `next/font/google` self-hosts at build time and is fine. |
+| `tracking-before-consent` | analytics / pixels / session replay with no consent gate | EU: ePrivacy **Art. 5(3)** needs prior consent for non-essential tags. California: CIPA claims; **Cal. Penal Code §637.2** allows **$5,000 per violation** or 3× actual. Note SB 690 (effective 1 Jan 2027) makes §638.51 pen-register claims AG-only for websites; §631/§632 claims survive. |
+| `cookie-consent-banner` | trackers present, no consent library or gate | Reject must be as easy as Accept, nothing pre-ticked, granular, withdrawable. |
+| `secrets-exposed` | live keys in client code, bundle, or a committed `.env` | Rotate first, then move server-side. Anything behind `NEXT_PUBLIC_`/`VITE_`/`REACT_APP_` is published. A Firebase `AIza…` web key is public by design — not a leak. |
+| `open-database` | RLS disabled, `using (true)`, or `allow read, write: if true` | The anon key is in the browser. Deny by default, scope every policy to `auth.uid()`. Verify in the hosted dashboard — policies are not in the repo. |
+| `privacy-policy-terms` | either document missing | CalOPPA **Cal. B&P §22575** (30-day cure after notice; up to **$2,500** per violation via the UCL). GDPR **Arts. 13–14** if EU users. The policy must name the processors the code actually uses. |
+| `ccpa-do-not-sell` | ad pixels present, no opt-out link | CCPA/CPRA **Cal. Civ. Code §1798.135**. Applies only above a threshold (**>$26.625M** revenue, **100,000+** CA consumers/households, or **≥50%** of revenue from selling PI) **and** if you sell or share — ad pixels count as sharing. Honour `navigator.globalPrivacyControl`. Fines up to **$2,663** per violation / **$7,988** intentional. |
+| `dmca-agent` | user uploads/UGC with no DMCA agent or takedown process | **17 U.S.C. §512(c)(2)** — designation is a threshold condition for the safe harbour. Register at `dmca.copyright.gov`, **$6**. No agent = no safe harbour, **not** a fine. |
+| `coppa-age-gate` | child-directed signals with no age collection | **15 U.S.C. §§6501–6506**; **16 C.F.R. Part 312**. Amended rule published **22 Apr 2025**, full compliance by **22 Apr 2026**; civil penalty up to **$53,088** per violation. Applies only if child-directed or on actual knowledge. Collect date of birth, not "are you 13?". |
+| `can-spam` | email sending with no unsubscribe or no postal address | **15 U.S.C. §7704**; **16 C.F.R. Part 316**. Up to **$53,088 per email** (FTC figure in force since 17 Jan 2025, unchanged for 2026). Purely transactional mail is exempt from the opt-out duty. EU/UK generally needs consent first. |
+| `auto-renew-terms` | recurring billing with no renewal disclosure or no online cancel | California ARL **B&P §17600 et seq.**, amended by **AB 2863** for contracts from **1 Jul 2025**; **§17603** deems goods sent without affirmative consent an **unconditional gift**. Federal ROSCA still applies — the FTC click-to-cancel rule was vacated July 2025 and is being re-proposed. |
+| `accessibility-basics` | missing `alt`, unlabelled inputs, no `lang`, positive `tabindex`, click-on-div | Target **WCAG 2.2 AA**. ADA Title III litigation is the US private-sector exposure. EU **European Accessibility Act** has applied to consumer e-commerce since **28 Jun 2025** (EN 301 549 → WCAG 2.1 AA); **micro-enterprises** (<10 staff, ≤€2M) are exempt from the service duties. Contrast and keyboard need a browser. |
+| `ai-disclosure` | user-facing AI chat with no disclosure text | EU AI Act **Art. 50** (Reg. 2024/1689) applies from **2 Aug 2026** and was **not** delayed by the Digital Omnibus; Art. 50(2) marking had a grace period to **2 Dec 2026** for pre-existing systems. California B.O.T. Act **B&P §17941** — disclosure is the safe harbour; up to **$2,500** per violation via the UCL. |
+| `refund-policy` | payments with no refund policy | FTC Act §5 for undisclosed terms. EU **CRD 2011/83/EU** gives a **14-day** withdrawal right; for instant digital delivery you need express consent to begin **plus** acknowledgement that the right is lost. |
+| `sales-tax-vat` | advisory note only — never fails | EU: VAT due in the customer's state via OSS; the **€10,000** threshold is for **EU-established** sellers only, so a non-EU seller registers from the first sale. US: economic nexus after **Wayfair** (2018), varying by state. |
+| `third-party-licences` | no `LICENSE`, fonts with no licence file, restrictive deps | Copyleft (GPL/AGPL/SSPL) can reach your source — AGPL in a hosted app especially. Desktop font EULAs usually forbid `@font-face`. Keep a `CREDITS.md`. |
+
+## Grep patterns, if the scanner is unavailable
+
+```bash
+grep -rn "fonts.googleapis.com\|fonts.gstatic.com" --include="*.html" --include="*.css" --include="*.ts*" --include="*.js*" .
+grep -rn "googletagmanager\|gtag(\|fbq(\|hotjar\|clarity.ms\|fullstory\|logrocket\|posthog\|mixpanel" --include="*.ts*" --include="*.js*" --include="*.html" .
+grep -rn "sk_live_\|sk-ant-api\|sk-proj-\|AKIA\|ghp_\|service_role\|-----BEGIN .*PRIVATE KEY" .
+grep -rn "disable row level security\|using (true)\|allow read, write: if true\|\"\.read\": true" .
+grep -rn "privacy\|terms\|unsubscribe\|refund\|DMCA\|do not sell" --include="*.ts*" --include="*.js*" --include="*.html" --include="*.md" .
+grep -rn "<img" --include="*.html" --include="*.tsx" --include="*.jsx" . | grep -v "alt="
+```
+
+## Step 3 — the report
+
+Order worst-first. For each failure: **what**, **where** (`file:line`), **why it
+may matter** (with the citation and its date), and a **fix** the user can paste
+or do in ten minutes. Then NEEDS REVIEW items, each with the specific question
+the user must answer. Then PASSes, one line each. Then a **Not checked** section
+— never let an unchecked item appear as a PASS.
+
+Mark as NEEDS REVIEW anything that needs a browser (colour contrast, keyboard
+traps, whether tags really wait for consent), a hosted dashboard (Supabase or
+Firebase rules), or a fact only the user knows (revenue thresholds, markets,
+whether the DMCA agent is actually registered).
+
+If the repo does not tell you, ask all four scope questions at once: EU/UK
+visitors? California visitors? User uploads? Recurring charges?
+
+Close by offering to fix the failures. Do not start fixing.
+
+## Disclaimer — include verbatim
+
+> **Educational, not legal advice.** This report describes patterns found in
+> your code. It cannot see your contracts, your data flows, your markets, your
+> thresholds or your risk appetite, and it does not cover every law that might
+> apply to you. A clean report is not a compliance certificate, and nothing here
+> creates a lawyer–client relationship. Laws change and differ by jurisdiction —
+> for anything consequential, get advice from a qualified lawyer in the places
+> you operate.
+>
+> Citations and dates: https://github.com/vynemastudio/vibe-check/blob/main/SOURCES.md

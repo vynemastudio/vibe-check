@@ -1,10 +1,16 @@
 {
+  "$schema": "https://www.schemastore.org/claude-code-plugin-manifest.json",
   "name": "vibe-check",
-  "description": "Pre-launch legal and compliance audit for vibe-coded web apps: 16 checks, PASS / FAIL / NEEDS REVIEW with file:line evidence and fixes. Educational, not legal advice.",
+  "displayName": "vibe-check",
+  "description": "Scans a vibe-coded web app for common legal and compliance gaps before launch, and reports PASS / FAIL / NEEDS REVIEW per check with file:line evidence and a concrete fix. Educational, not legal advice.",
   "version": "1.0.0",
   "author": { "name": "Vynema Studio", "url": "https://github.com/vynemastudio" },
   "homepage": "https://vynemastudio.github.io/vibe-check/",
   "repository": "https://github.com/vynemastudio/vibe-check",
   "license": "MIT",
-  "keywords": ["compliance", "gdpr", "privacy", "vibe-coding", "audit", "skill"]
+  "keywords": [
+    "compliance", "legal", "privacy", "gdpr", "ccpa", "coppa", "can-spam",
+    "accessibility", "wcag", "security", "secrets", "pre-launch", "audit"
+  ],
+  "skills": ["./skills/vibe-check"]
 }

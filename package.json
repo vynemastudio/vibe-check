@@ -1,0 +1,23 @@
+{
+  "name": "vibe-check",
+  "version": "1.0.0",
+  "description": "Scans a vibe-coded web app for common legal and compliance gaps before launch. Educational, not legal advice.",
+  "license": "MIT",
+  "author": "Vynema Studio",
+  "homepage": "https://vynemastudio.github.io/vibe-check/",
+  "repository": { "type": "git", "url": "https://github.com/vynemastudio/vibe-check.git" },
+  "bugs": "https://github.com/vynemastudio/vibe-check/issues",
+  "keywords": ["compliance", "legal", "privacy", "gdpr", "ccpa", "coppa", "can-spam", "accessibility", "wcag", "secrets", "pre-launch", "claude-code", "agent-skill"],
+  "engines": { "node": ">=18" },
+  "type": "module",
+  "bin": { "vibe-check": "skills/vibe-check/scripts/scan.mjs" },
+  "files": ["skills/", "scripts/", "SOURCES.md", "LICENSE", "README.md"],
+  "scripts": {
+    "test": "node test/run.mjs",
+    "scan": "node scripts/scan.mjs .",
+    "build:zip": "bash scripts/build-zip.sh",
+    "selfcheck": "node scripts/scan.mjs . --quiet"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

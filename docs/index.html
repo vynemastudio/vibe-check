@@ -190,29 +190,29 @@ footer a{color:var(--white);text-decoration:none;border-bottom:1px solid var(--l
 </div></section>
 
 <section><div class="wrap">
-  <div class="disc"><strong>Educational, not legal advice.</strong> Vibe Check is an educational tool. It doesn't create a lawyer–client relationship, and a passing report doesn't mean your app complies with any law. Penalty figures are statutory maximums or single rulings, shown for context. Laws change and depend on your facts, so consult a qualified lawyer. <a href="https://github.com/vynemastudio/vibe-check/blob/main/skills/vibe-check/references/SOURCES.md">See sources</a>.</div>
+  <div class="disc"><strong>Educational, not legal advice.</strong> Vibe Check is an educational tool. It doesn't create a lawyer–client relationship, and a passing report doesn't mean your app complies with any law. Penalty figures are statutory maximums or single rulings, shown for context. Laws change and depend on your facts, so consult a qualified lawyer. <a href="https://github.com/vynemastudio/vibe-check/blob/main/SOURCES.md">See sources</a>.</div>
 </div></section>
 </main>
 <footer class="wrap">Made by <strong style="color:var(--white)">Vynema Studio</strong> · <a href="https://instagram.com/vynemastudio">@vynemastudio</a> on Instagram<br><span style="font-size:12px">MIT licence · <a href="https://github.com/vynemastudio/vibe-check">GitHub</a></span></footer>
 
 <script>
 const CHECKS=[
-["VC01","Google Fonts from Google's servers","If you have EU visitors: a Munich court awarded <b>€100 to one visitor</b> (2022)."],
-["VC02","Session replay before consent","California CIPA suits: <b>$5,000 per violation</b>; courts are split."],
-["VC03","Hidden auto-renew terms","California ARL: unconsented renewals can be <b>deemed a gift</b>; online cancel since Jul 2025."],
-["VC04","Kids' data and age gate","Only if child-directed or you know a user is under 13. COPPA: up to <b>$53,088 per violation</b>."],
-["VC05","Email without unsubscribe","CAN-SPAM: up to <b>$53,088 per email</b>."],
-["VC06","Uploads without a DMCA agent","<b>$6</b> registration. No fine, but you lose the safe harbor."],
-["VC07","Secrets in frontend / .env","Leaked keys get abused within hours. Rotate and move them server-side."],
-["VC08","Open database rules","Firebase <b>if true</b> rules or Supabase without RLS."],
-["VC09","Privacy policy and terms","CalOPPA, GDPR Art. 13 and the app stores require a policy."],
-["VC10","Trackers before cookie consent","EU/UK: non-essential trackers need opt-in first."],
-["VC11","\u201cDo Not Sell or Share\u201d","CCPA, only above its thresholds: <b>$2,663 / $7,988</b> intentional."],
-["VC12","Accessibility basics","Alt text, labels, focus, zoom. ADA letters and the EU Accessibility Act."],
-["VC13","AI chatbot disclosure","EU AI Act Art. 50 from <b>2 Aug 2026</b>; California bot law."],
-["VC14","Refund policy","EU 14-day withdrawal rules; processors require a stated policy."],
-["VC15","Sales tax / VAT","EU OSS and US nexus. Consider a merchant of record."],
-["VC16","Licences","Open-source, fonts, images and AI model terms."]];
+["google-fonts","Google Fonts from Google's servers","If you have EU visitors: a Munich court awarded <b>€100 to one visitor</b> (2022)."],
+["tracking-before-consent","Session replay before consent","California CIPA suits: <b>$5,000 per violation</b>; courts are split."],
+["auto-renew-terms","Hidden auto-renew terms","California ARL: unconsented renewals can be <b>deemed a gift</b>; online cancel since Jul 2025."],
+["coppa-age-gate","Kids' data and age gate","Only if child-directed or you know a user is under 13. COPPA: up to <b>$53,088 per violation</b>."],
+["can-spam","Email without unsubscribe","CAN-SPAM: up to <b>$53,088 per email</b>."],
+["dmca-agent","Uploads without a DMCA agent","<b>$6</b> registration. No fine, but you lose the safe harbor."],
+["secrets-exposed","Secrets in frontend / .env","Leaked keys get abused within hours. Rotate and move them server-side."],
+["open-database","Open database rules","Firebase <b>if true</b> rules or Supabase without RLS."],
+["privacy-policy-terms","Privacy policy and terms","CalOPPA, GDPR Art. 13 and the app stores require a policy."],
+["cookie-consent-banner","Trackers before cookie consent","EU/UK: non-essential trackers need opt-in first."],
+["ccpa-do-not-sell","\u201cDo Not Sell or Share\u201d","CCPA, only above its thresholds: <b>$2,663 / $7,988</b> intentional."],
+["accessibility-basics","Accessibility basics","Alt text, labels, focus, zoom. ADA letters and the EU Accessibility Act."],
+["ai-disclosure","AI chatbot disclosure","EU AI Act Art. 50 from <b>2 Aug 2026</b>; California bot law."],
+["refund-policy","Refund policy","EU 14-day withdrawal rules; processors require a stated policy."],
+["sales-tax-vat","Sales tax / VAT","EU OSS and US nexus. Consider a merchant of record."],
+["third-party-licences","Licences","Open-source, fonts, images and AI model terms."]];
 document.getElementById('checklist').innerHTML=CHECKS.map(([i,t,d])=>`<div class="check"><span class="id">${i}</span><h3>${t}</h3><p>${d}</p></div>`).join('');
 
 // tabs
@@ -227,17 +227,17 @@ const T=document.getElementById('term');
 const S=[
  ['cmd','vibe check my app',700],
  ['html','<span class="t-lime">▲ VIBE CHECK</span> <span class="t-dim">v1.0 · scanning shipfast-notes/ (8 files)</span>',500],
- ['html','<span class="tag f" data-id="1">FAIL</span>VC01 Google Fonts from Google servers\n   <span class="t-cy">index.html:8</span> <span class="t-dim">fonts.googleapis.com/css2?family=Inter</span>',650],
- ['html','<span class="tag f" data-id="2">FAIL</span>VC02 Session replay before consent\n   <span class="t-cy">analytics.js:3</span> <span class="t-dim">rrweb.record({</span>',650],
- ['html','<span class="tag f" data-id="3">FAIL</span>VC03 Auto-renew terms hidden at checkout\n   <span class="t-cy">checkout.html:9</span> <span class="t-dim">font-size:9px;color:#eee</span>',650],
- ['html','<span class="tag p">PASS</span><span class="t-dim">VC05–VC13 · 8 more checks</span>',500],
- ['html','<span class="t-red">3 FAIL</span> <span class="t-dim">·</span> <span class="t-lime">8 PASS</span>',1100],
+ ['html','<span class="tag f" data-id="1">FAIL</span>google-fonts · Google Fonts from Google servers\n   <span class="t-cy">index.html:8</span> <span class="t-dim">fonts.googleapis.com/css2?family=Inter</span>',650],
+ ['html','<span class="tag f" data-id="2">FAIL</span>tracking-before-consent · Session replay before consent\n   <span class="t-cy">analytics.js:3</span> <span class="t-dim">rrweb.record({</span>',650],
+ ['html','<span class="tag f" data-id="3">FAIL</span>auto-renew-terms · Auto-renew terms hidden at checkout\n   <span class="t-cy">checkout.html:9</span> <span class="t-dim">font-size:9px;color:#eee</span>',650],
+ ['html','<span class="tag p">PASS</span><span class="t-dim">8 more checks · 5 need a human decision</span>',500],
+ ['html','<span class="t-red">3 FAIL</span> <span class="t-dim">· 5 NEEDS REVIEW ·</span> <span class="t-lime">8 PASS</span>',1100],
  ['cmd','fix them',700],
  ['html','<span class="t-amb">✎</span> self-host Inter .woff2 <span class="t-dim">· removed googleapis link</span>',450],
  ['html','<span class="t-amb">✎</span> start replay after opt-in <span class="t-dim">· maskAllInputs: true</span>',450],
  ['html','<span class="t-amb">✎</span> renewal terms above button <span class="t-dim">· consent box · online cancel</span>',700],
  ['flip','',900],
- ['html','<span class="t-lime">0 FAIL · 11 PASS</span> <span class="t-dim">· ready for launch review</span>',600],
+ ['html','<span class="t-lime">0 FAIL · 11 PASS</span> <span class="t-dim">· 5 to review</span> <span class="t-dim">· ready for launch review</span>',600],
  ['html','<span class="t-dim">Educational check, not legal advice.</span>',3600]];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
